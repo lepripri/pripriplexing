@@ -73,4 +73,4 @@ Contrairement à ce que l'on pourrait croire, une LED RGB dans cette configurati
 
 ---
 
-*Document généré le 3 février 2026. Prototype conservé en lieu sûr (coffre-fort).*
+*Document généré le 3 février 2026. Prototype conservé en lieu sûr (coffre-fort). ©2025 le pripri • tout droits réservé*
