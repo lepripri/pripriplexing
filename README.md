@@ -1,76 +1,62 @@
-# Documentation Technique : Le Pripriplexing
+# 🚀 Pripriplexing : Niveau 3 & 4 (Arduino Mega)
 
-Le **Pripriplexing** est une architecture d'affichage hybride optimisée pour piloter des LEDs RGB (mélange de Cathode Commune et Anode Commune) avec un nombre minimal de broches de microcontrôleur.
+Le **Pripriplexing** est une méthode d'optimisation du multiplexage permettant de piloter des paires de LEDs (ou d'afficheurs) de polarités opposées (Anode Commune et Cathode Commune) sur un bus de données partagé.
 
-## 1. Concept Fondamental
+## 📐 La Formule de "Pripri"
 
-Le système repose sur la fusion de deux techniques :
+Après tests sur 12 LEDs avec une Arduino Mega, la formule de calcul des broches nécessaires a été validée :
 
-* **Charlieplexing des Communs** : Les broches communes (Anodes ou Cathodes) sont montées en réseau Charlieplexé.
-* **Multiplexage des Couleurs** : Les lignes de couleurs (R, V, B) sont partagées sur un bus simple.
+                            $Pins = \frac{L}{2} + S$
 
-Cette méthode permet de piloter **18 segments (6 LEDs RGB)** avec seulement **6 broches** GPIO.
+*Où  est le nombre total de LEDs (ou d'afficheurs).*
 
----
+## 🛠 Matériel & Configuration
 
-## 2. Architecture Matérielle
+* **Contrôleur :** Arduino Mega 2560.
+* **Câblage actuel :** 9 pins pour 12 LEDs (6 paires CC/AC).
+* **Résistances :** * **220Ω** (Configuration 5V actuelle - Vert).
+* **47Ω** (Prévu pour futur passage en 3.3V / ESP32).
+* **10kΩ** (Pull-down pour éliminer les couleurs fantômes/ghosting).
 
-### Configuration des Broches (Arduino Mega)
 
-| Broches | Fonction | Description |
-| --- | --- | --- |
-| **D2, D3, D4** | Bus RGB | Couleurs plexées (Rouge, Vert, Bleu) |
-| **D5, D6, D7** | Communs | Adressage Charlieplexé (P1, P2, P3) |
+* **Affichage :** 20x Afficheurs 7 segments 0.56" Verts (10x 3191AS Anode / 10x 3191BS Cathode).
 
-### Montage des LEDs par Paires
+## 💻 Code de Base (POV Optimisé)
 
-Le "Pripriplexing" utilise l'opposition de polarité pour doubler la capacité de chaque broche de commun :
+Le code fonctionne sans `delay()` pour exploiter la persistance rétinienne et supprimer tout scintillement.
 
-* **Paire 1 (D5)** : Une LED Cathode Commune (CC) + Une LED Anode Commune (AC).
-* **Paire 2 (D6)** : Une LED CC + Une LED AC.
-* **Paire 3 (D7)** : Une LED CC + Une LED AC.
+```cpp
+// --- CONFIGURATION ---
+const int pinsRGB[] = {2, 3, 4}; // Bus de données
+const int pinsCommuns[] = {5, 6, 7, 8, 9, 10}; // Pins de sélection
 
-> **Note Cruciale :** Des résistances de **1kΩ** sont obligatoires sur chaque ligne de couleur (D2, D3, D4) pour limiter le courant et supprimer le ghosting par chute de tension.
+void setup() {
+  for(int i=0; i<3; i++) pinMode(pinsRGB[i], INPUT);
+  for(int i=0; i<6; i++) pinMode(pinsCommuns[i], INPUT);
+}
 
----
+void loop() {
+  for (int i = 0; i < 6; i++) {
+    allumerPaire(i); // Rafraîchissement ultra-rapide sans delay
+  }
+}
 
-## 3. Logique de Pilotage (Table de Vérité)
+```
 
-Pour allumer une LED spécifique, les broches non utilisées doivent impérativement rester en **Haute Impédance (INPUT)**.
+## 📈 Évolution : Niveau 4 (En attente de livraison AliExpress 📦)
 
-| Cible | Type | Commun (D5-D7) | Couleur (D2-D4) |
-| --- | --- | --- | --- |
-| **LED CC** | Cathode Commune | `OUTPUT LOW` (Masse) | `OUTPUT HIGH` (5V) |
-| **LED AC** | Anode Commune | `OUTPUT HIGH` (5V) | `OUTPUT LOW` (Masse) |
+Le passage au Niveau 4 implique la gestion de **20 afficheurs 7 segments**.
 
----
+* [ ] Réception des 100 résistances (220R, 100R, 47R, 10k).
+* [ ] Test unitaire des afficheurs verts (3191AS/BS).
+* [ ] Création du bus de segments (8 lignes A-DP).
+* [ ] Implémentation de la table de vérité 0-9.
 
-## 4. Synthèse des Couleurs (7 Couleurs)
+## ⚠️ Notes de maintenance
 
-Le Pripriplexing utilise la persistance rétinienne pour créer des couleurs secondaires :
-
-1. **Rouge** : Allumage R.
-2. **Vert** : Allumage V.
-3. **Bleu** : Allumage B.
-4. **Jaune** : Alternance rapide R + V.
-5. **Cyan** : Alternance rapide V + B.
-6. **Magenta** : Alternance rapide R + B.
-7. **Blanc** : Alternance rapide R + V + B.
-
-### 📝 Note
-
-Contrairement à ce que l'on pourrait croire, une LED RGB dans cette configuration n'a pas systématiquement besoin d'alternance rapide :
-
-* **Couleurs Primaires (Rouge, Vert ou Bleu) :** L'allumage est **statique**. Tant que la broche de commun et la broche de couleur choisie sont actives, la LED brille de façon continue sans aucun scintillement.
-* **Couleurs Composées (Jaune, Cyan, Magenta, Blanc) :** C'est ici que l'alternance intervient. Puisque les trois anodes (ou cathodes) de la LED RGB partagent le même point de retour, l'Arduino doit basculer très vite entre les broches de couleur pour donner l'illusion d'un mélange.
----
-
-## 5. Avantages Constatés
-
-* **Zéro Ghosting** : Grâce à l'opposition CC/AC et aux résistances de 1kΩ.
-* **Stabilité du Blanc** : Le mélange des trois couleurs reste net malgré le multiplexage.
-* **Efficience** : Consommation électrique réduite par le balayage temporel.
+* **Problème USB :** Ports USB du PC (ou de la carte) ayant des faux contacts. **Interdiction de manipuler la carte pendant le téléversement.**
+* **Applications Mobiles :** Suite à un bug sur **Redmi A5**, les applications de notes (**Easy Markdown**, **Notally**, **Fast n Small Notes**) sont inaccessibles [cite: 2026-02-01]. **Toute la documentation doit être faite directement ici sur GitHub.**
 
 ---
 
-*Document généré le 3 février 2026. Prototype conservé en lieu sûr (coffre-fort). ©2026 le pripri et ©2026 pripriplexing • tout droits réservé*
+### Souhaites-tu que j'ajoute une section "Table de vérité" pour préparer l'affichage des chiffres 0 à 9 sur tes nouveaux écrans ?
