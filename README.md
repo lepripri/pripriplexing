@@ -5,10 +5,7 @@ Le **Pripriplexing** est une méthode d'optimisation du multiplexage permettant 
 ## 📐 La Formule de "Pripri"
 
 Après tests sur 12 LEDs avec une Arduino Mega, la formule de calcul des broches nécessaires a été validée :
-
-                            Pins = S + _E_
-                                        2
-
+                            $Pins = \frac{L}{2} + S$
 *Où  est le nombre total de LEDs (ou d'afficheurs).*
 
 ## 🛠 Matériel & Configuration
