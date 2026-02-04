@@ -18,7 +18,7 @@ soit $S$, le nombre de segments par LEDs
 * **Câblage actuel :** 9 pins pour 12 LEDs (6 paires CC/AC).
 * **Résistances :** * **220Ω** (Configuration 5V actuelle - Vert).
 * **47Ω** (Prévu pour futur passage en 3.3V / ESP32).
-* **10kΩ** (Pull-down pour éliminer les couleurs fantômes/ghosting).
+* **10kΩ** (si besoin, Pull-down pour éliminer les couleurs fantômes/ghosting).
 
 
 * **Affichage :** 20x Afficheurs 7 segments 0.56" Verts (10x 3191AS Anode / 10x 3191BS Cathode).
