@@ -56,5 +56,5 @@ Le passage au Niveau 4 implique la gestion de **20 afficheurs 7 segments**.
 
 ## ⚠️ Notes de maintenance
 
-* **Problème USB :** Ports USB du PC (ou de la carte) ayant des faux contacts. **Interdiction de manipuler la carte pendant le téléversement.**
+* **Problème USB :** Ports USB du PC (ou de la carte) ayant des faux contacts ? **Interdiction de manipuler la carte pendant le téléversement.**
 * **Applications Mobiles :** Suite à un bug sur **Redmi A5**, les applications de notes (**Easy Markdown**, **Notally**, **Fast n Small Notes**) sont inaccessibles [cite: 2026-02-01]. **Toute la documentation doit être faite directement ici sur GitHub.**
