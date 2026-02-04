@@ -16,9 +16,10 @@ soit $S$, le nombre de segments par LEDs
 
 * **Contrôleur :** Arduino Mega 2560.
 * **Câblage actuel :** 9 pins pour 12 LEDs (6 paires CC/AC).
-* **Résistances :** * **220Ω** (Configuration 5V actuelle - Vert).
-* **47Ω** (Prévu pour futur passage en 3.3V / ESP32).
+* **Résistances :** * **220Ω** (proteger les LEDs et la carte).
+* **47Ω** (si vous êtes sur du 3,3V, par exemple ESP32).
 * **10kΩ** (si besoin, Pull-down pour éliminer les couleurs fantômes/ghosting).
+* **un driver de LEDs** (très important si vous avez beaucoups de LEDs, sans cela vous pouvez griller les gpio de votre carte).
 
 
 * **Affichage :** 20x Afficheurs 7 segments 0.56" Verts (10x 3191AS Anode / 10x 3191BS Cathode).
@@ -45,7 +46,7 @@ void loop() {
 
 ```
 
-## 📈 Évolution : Niveau 4 (En attente de livraison AliExpress 📦)
+## 📈 Évolution : Niveau 4
 
 Le passage au Niveau 4 implique la gestion de **20 afficheurs 7 segments**.
 
